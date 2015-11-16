@@ -1,0 +1,55 @@
+mysql> create database Sample_mysql;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use Sample_mysql;
+Database changed
+
+mysql> create table Analyst_Ratings ( Stock_Ticker text, Analyst_Name text, Rating_Date date, Rating_Name text);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert into Analyst_Ratings (Stock_Ticker, Analyst_Name, Rating_Date, Rating_Name) values ('ABC', 'JohnDoe', '2009/09/06', 'Hold');
+Query OK, 1 row affected (0.02 sec)
+mysql> insert into Analyst_Ratings (Stock_Ticker, Analyst_Name, Rating_Date, Rating_Name) values ('PQR', 'JohnDoe', '2010/01/20', 'Sell');
+Query OK, 1 row affected (0.00 sec)
+mysql> insert into Analyst_Ratings (Stock_Ticker, Analyst_Name, Rating_Date, Rating_Name) values ('XYZ', 'JonesDoe', '2009/12/05', 'Buy');
+Query OK, 1 row affected (0.00 sec)
+mysql> insert into Analyst_Ratings (Stock_Ticker, Analyst_Name, Rating_Date, Rating_Name)  values ('ABC', 'JohnDoe', '2007/12/05', 'Buy');
+Query OK, 1 row affected (0.04 sec)
+
+
+mysql> select * from Analyst_Ratings;                                           +--------------+--------------+-------------+-------------+
+| Stock_Ticker | Analyst_Name | Rating_Date | Rating_Name |
++--------------+--------------+-------------+-------------+
+| ABC          | JohnDoe      | 2009-09-06  | Hold        |
+| PQR          | JohnDoe      | 2010-01-20  | Sell        |
+| XYZ          | JonesDoe     | 2009-12-05  | Buy         |
+| ABC          | JohnDoe      | 2007-12-05  | Buy         |
++--------------+--------------+-------------+-------------+
+4 rows in set (0.00 sec)
+
+Q1: Write a SQL query that would select the latest recommendation from each analyst for each stock.
+
+A: mysql> select Stock_Ticker,Analyst_Name,Rating_Name,max(Rating_Date) from Analyst_Ratings group by Analyst_Name,Stock_Ticker;
+
++--------------+--------------+-------------+------------------+
+| Stock_Ticker | Analyst_Name | Rating_Name | max(Rating_Date) |
++--------------+--------------+-------------+------------------+
+| ABC          | JohnDoe      | Hold        | 2010-01-20       |
+| XYZ          | JonesDoe     | Buy         | 2009-12-05       |
++--------------+--------------+-------------+------------------+
+2 rows in set (0.08 sec)
+
+Q2: Write a SQL query that would select the latest recommendation from each analyst for each stock as known on a specific date (e.g. 1/1/10).
+
+
+A: mysql> select Stock_Ticker,Analyst_Name,Rating_Name,max(Rating_Date) from Analyst_Ratings where Rating_Date <'2010-12-12' group by Analyst_Name,Stock_Ticker;
+
++--------------+--------------+-------------+------------------+
+| Stock_Ticker | Analyst_Name | Rating_Name | max(Rating_Date) |
++--------------+--------------+-------------+------------------+
+| ABC          | JohnDoe      | Hold        | 2009-09-06       |
+| PQR          | JohnDoe      | Sell        | 2010-01-20       |
+| XYZ          | JonesDoe     | Buy         | 2009-12-05       |
++--------------+--------------+-------------+------------------+
+3 rows in set (0.01 sec)
+ 
